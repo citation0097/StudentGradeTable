@@ -54,8 +54,9 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(){
     console.log("handleAddClicked");
-    addStudent();
 
+    addStudent();
+    currentRow++;
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -86,7 +87,11 @@ function addStudent(){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-    student_array.pop();
+    // student_array.pop();
+    // student = {};
+    $('#studentName').val('');
+    $('#course').val('');
+    $('#studentGrade').val('') ;
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -96,14 +101,14 @@ function clearAddStudentFormInputs(){
 function renderStudentOnDom(student_list){
 
     //console.log('renderStudentOnDom',student_list[0].name);
-    currentRow++;
+
     var row = $('<tr>');
     row.attr('text' , currentRow);
     row.attr('text' , "tr" + currentRow);
     console.log('renderStudentOnDom',currentRow);
-    var column = '<td>' + student_list[0].name + '</td>'
-        + '<td>' + student_list[0].course + '</td>'
-        + '<td>' + student_list[0].grade + '</td>'
+    var column = '<td>' + student_list[currentRow].name + '</td>'
+        + '<td>' + student_list[currentRow].course + '</td>'
+        + '<td>' + student_list[currentRow].grade + '</td>'
     var deleteBtn = $('<td>').attr('type','button').addClass('btn btn-danger');
     deleteBtn.text('Delete');
     var body = $(".table").find('tbody');
@@ -114,6 +119,7 @@ function renderStudentOnDom(student_list){
     $(".btn-danger").click( function(){
         var targetrow = $(event.currentTarget).parent();
         targetrow.remove();
+
     });
 
 }
@@ -126,11 +132,11 @@ function renderStudentOnDom(student_list){
  */
 function updateStudentList(student_list){
 
-    for( var eachstudent in student_list ){
+    // for( var eachstudent in student_list ){
         renderStudentOnDom(student_list);
-        console.log('updateStudentList', student_list);
-        console.log('updateStudentList_eachstudent', eachstudent);
-    }
+        // console.log('updateStudentList', student_list);
+        // console.log('updateStudentList_eachstudent', eachstudent);
+    // }
     calculateGradeAverage();
 }
 /***************************************************************************************************
