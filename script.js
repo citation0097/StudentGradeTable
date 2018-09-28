@@ -21,8 +21,50 @@ $(document).ready(initializeApp);
  * ];
  */
 student_array = [];
+// var data_check = true;
+var data_object = { api_key: 'zgjo1f87H3',
+                     id: '',
+                     name: '',
+                     course: '',
+                     grade: ''};
 
-var currentRow = 0;
+var ajaxParams = {
+    data: data_object,
+    dataType: 'json',
+     url: '',
+    method: 'post',
+    success: getStudent,
+
+}
+
+function  getStudent(response){
+    if(response.success){
+        for( var i  in  response.data) {
+            var    student = new Object();
+            student.id = response.data[i].id;
+            student.name = response.data[i].name;
+            student.course =  response.data[i].course;
+            student.grade =  response.data[i].grade;
+            student_array.push(student);
+            updateStudentList(student_array);
+
+        }
+        console.log('msg success', response);
+        // data_check = true;
+
+    }else{
+        modalMsg(response.errors);
+        // data_check = false;
+
+    }
+}
+
+
+function modalMsg( response){
+    $(".modal-body > p").text(response);
+    $('#errorModal').modal();
+
+}
 
 /***************************************************************************************************
 * initializeApp 
@@ -32,6 +74,10 @@ var currentRow = 0;
 */
 function initializeApp(){
     addClickHandlersToElements();
+    data_object ={};
+    ajaxParams.url = 'https://s-apis.learningfuze.com/sgt/get';
+    // ajaxParams.success = getStudent;
+    $.ajax(ajaxParams);
 }
 
 /***************************************************************************************************
@@ -45,34 +91,6 @@ function addClickHandlersToElements(){
     $(".btn-success").click( handleAddClicked );
     $(".btn-default").click( handleCancelClick );
 
-    $(".btn-info").click( function(){
-
-        var data_object = { api_key: 'zgjo1f87H3' };
-        var ajaxParams = {
-            dataType: 'json',
-            url: 'https://s-apis.learningfuze.com/sgt/get',
-            method: 'post',
-            success: function( response ){
-                if(response.success){
-                    var student_ajax_array =[];
-                    // student_array = [];
-                    for( var i = 0 ;  i <  response.data.length; i++) {
-                        var    student = new Object();
-                        student.name = response.data[i].name;
-                        student.course =  response.data[i].course;
-                        student.grade =  response.data[i].grade;
-                        student_array.push(student);
-                        updateStudentList(student_array);
-                        clearAddStudentFormInputs();
-                    }
-                }else{
-                    return false;
-                };
-            },
-            data: data_object
-        }
-        $.ajax(ajaxParams);
-    });
 }
 
 /***************************************************************************************************
@@ -82,10 +100,8 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(){
-    console.log("handleAddClicked");
-
     addStudent();
-    currentRow++;
+
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -103,14 +119,27 @@ function handleCancelClick(){
  */
 function addStudent(){
     var    student = new Object();
+    data_object ={};
     student.name =  $('#studentName').val();
     student.course =  $('#course').val();
     student.grade =  $('#studentGrade').val();
-    // console.log('addStudent',student);
-    if (student.name === ''){ return;}
-    student_array.push(student);
-    updateStudentList(student_array);
-    clearAddStudentFormInputs();
+
+    data_object.api_key = 'zgjo1f87H3';
+    data_object.name = student.name;
+    data_object.course = student.course;
+    data_object.grade     = student.grade;
+    ajaxParams.data = data_object;
+    ajaxParams.url = 'https://s-apis.learningfuze.com/sgt/create';
+    $.ajax(ajaxParams);
+
+    console.log('addStudent', ajaxParams );
+
+    // if(data_check){
+        student_array.push(student);
+        updateStudentList(student_array);
+        clearAddStudentFormInputs();
+    // }
+
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -126,8 +155,9 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom(studentObj){
-
+    data_object ={};
     var row = $('<tr>');
+    row.attr('id', studentObj.id);
     var column = '<td>' + studentObj.name + '</td>'
         + '<td>' + studentObj.course + '</td>'
         + '<td>' + studentObj.grade + '</td>'
@@ -140,11 +170,20 @@ function renderStudentOnDom(studentObj){
 
     deleteBtn.click( function(){
         // console.log('btn studentObj',studentObj);
+        data_object ={};
         var stuIndex = student_array.indexOf(studentObj);
         var targetrow = $(event.currentTarget).parent();
-        targetrow.remove();
-        // console.log('btn delete stuIndex',stuIndex);
-        student_array.splice(stuIndex,1);
+
+        data_object.api_key = 'zgjo1f87H3';
+        data_object.student_id = parseInt(targetrow.attr('id'));
+        ajaxParams.url = 'https://s-apis.learningfuze.com/sgt/delete';
+        ajaxParams.data = data_object;
+        $.ajax(ajaxParams);
+        console.log('deleteStd',ajaxParams );
+        // if(data_check){
+            student_array.splice(stuIndex,1);
+            targetrow.remove();
+        // }
         var average = calculateGradeAverage(student_array);
         renderGradeAverage(average);
     });
@@ -175,7 +214,6 @@ function calculateGradeAverage(student_list){
 
     for( var i=0;  i < student_list.length ; i++ ){
         sum += parseInt(student_list[i].grade);
-     //   console.log('student_list[i].grade',student_list[i].grade);
     }
     return parseInt(sum / (student_list.length));
 }
