@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style type="text/css">
+
+        /* https://www.w3schools.com/html/html_entities.asp */
+        #greeting{
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(start);
+
+        function start(){
+            $("button").click( function(){
+                var val = $("username").val();
+                val.replace("<", "&lt:");
+                val.replace(">", "&gt:");
+                $("#greeting").show().find('span').html(val);
+                $("#ask").hide();
+            })
+        }
+        
+    </script>
+</head>
+<body>
+    <div id="greeting"></div>
+    <div id='ask'>
+        <input type="text" name ="name"  id="username"  required pattern="[a-zA-Z]{3,10}" title ="please only letters">
+        <button>submit</button>
+    </div>    
+</body>
+</html>
