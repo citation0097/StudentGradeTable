@@ -18,16 +18,11 @@ var ajaxParams = {
 
 function readDataFromSGT(){
     
-    let ajaxSelectParams = {
-        data: data_object,
-        dataType: 'json',
-        url: 'index_select.php',
-        method: 'post',
-        success: getStudentList, 
-        error: ""
-    } 
-    $.ajax(ajaxSelectParams);
-
+    ajaxParams.data = data_object;
+    ajaxParams.url = 'index_select.php';
+    ajaxParams.success =getStudentList;
+    $.ajax(ajaxParams);   
+    
 }
 
 
@@ -95,9 +90,6 @@ function addStudent(){
         updateStudentList();
         clearAddStudentFormInputs();
     } 
-           
-    
-
 }
 /***************************************************************************************************
  * updateStudent - update a student info
@@ -113,7 +105,7 @@ function updateStudent(){
     student.course =  $('#updCourse').val();
     student.grade =  $('#updstudentGrade').val();
     let valid = validateData( student.name, student.course,student.grade , "popup");
-    
+    console.log('updateStudent',valid);
     if(valid ){
         $("tbody").empty();
         data_object.student_id = student.student_id ;
@@ -166,19 +158,21 @@ function renderStudentOnDom(studentObj){
     row.appendTo(body);
     // delete button click
     deleteBtn.click( function(){
-        data_object ={};
-        let stuIndex = student_array.indexOf(studentObj);
-        let targetrow = $(event.currentTarget).parent();
+        let result = confirm("Are you sure delete?");
+        if(result){
+            data_object ={};
+            let stuIndex = student_array.indexOf(studentObj);
+            let targetrow = $(event.currentTarget).parent();
 
-        data_object.student_id = parseInt(targetrow.attr('id'));
-        ajaxParams.url = 'index_delete.php';
-        ajaxParams.data = data_object;
-        $.ajax(ajaxParams);
-        console.log('deleteStd',ajaxParams );
-        student_array.splice(stuIndex,1);
-        targetrow.remove();
-        let average = calculateGradeAverage(student_array);
-        renderGradeAverage(average);
+            data_object.student_id = parseInt(targetrow.attr('id'));
+            ajaxParams.url = 'index_delete.php';
+            ajaxParams.data = data_object;
+            $.ajax(ajaxParams);
+            student_array.splice(stuIndex,1);
+            targetrow.remove();
+            let average = calculateGradeAverage(student_array);
+            renderGradeAverage(average);
+        }   
     });
    // Edit button click
     updateBtn.click( function(){
@@ -192,8 +186,7 @@ function renderStudentOnDom(studentObj){
         $('#studentId').val(student_id);
         $('#updStudentName').val(targetrow[0].children[0].innerText);
         $('#updCourse').val(targetrow[0].children[1].innerText);
-        $('#updstudentGrade').val(targetrow[0].children[2].innerText);
-        
+        $('#updstudentGrade').val(targetrow[0].children[2].innerText );
     });
 
 }
@@ -205,11 +198,10 @@ function renderStudentOnDom(studentObj){
  */
 function calculateGradeAverage(student_list){
     let sum = 0;
-
     for( let i=0;  i < student_list.length ; i++ ){
         sum += parseFloat(student_list[i].grade);
     }
-    return parseFloat(sum / (student_list.length));
+    return parseInt(sum / (student_list.length));
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
@@ -226,75 +218,49 @@ function renderGradeAverage(average){
  * @returns true,false 
  */
 function validateData(fullName, course, grade, type){
-   
-    let gradeRegex= /^([0-9]|([1-9][0-9])|100)/;
+    // name
     if ( fullName == ''){
         if(type==="parent"){
-            // errorMsg("Name must be filled out");
-            $(".student-name").addClass("has-error");
-		    $(".student-icon").popover("show");
+           $(".student-name").addClass("has-error");
+		   $(".student-icon").popover("show");
         }else{
-            alert("Name must be filled out");
+           alert("Name must be filled out");
         }
-       
         return false;
-    } else{
+    }else{
         $(".student-name").removeClass("has-error");
-		$(".student-name").addClass("has-success");
-		$(".student-icon").popover("hide");
+        $(".student-name").addClass("has-success");
+        $(".student-icon").popover("hide");            
     }
+    //course
     if ( course == ''){
         if(type==="parent"){
-            errorMsg("Course must be filled out");
+            $(".student-course").addClass("has-error");
+		    $(".course-icon").popover("show");
         }else{
             alert("Course must be filled out");
         }
-        // console.log('validate course false');
         return false;
+    } else{
+        $(".student-course").removeClass("has-error");
+        $(".student-course").addClass("has-success");
+        $(".course-icon").popover("hide");
+            
     }
-    console.log('grade.match(gradeRegex)', grade.match(gradeRegex));
-    if(!grade.match(gradeRegex)){
+    // grade
+    if(grade === "" || grade > 100 || isNaN(grade)){
         if(type==="parent"){
-            errorMsg("Grade Number must between 0 ~ 100");
+            $(".student-grade").addClass("has-error");
+		    $(".grade-icon").popover("show");
         }else{
             alert("Grade Number must between 0 ~ 100");
         }
         return false;
+    } else{
+        $(".student-grade").removeClass("has-error");
+        $(".student-grade").addClass("has-success");
+        $(".grade-icon").popover("hide");
     }
     return true;
-
 }
 
-
-/***************************************************************************************************
- * checkFormEntry - Function that checks each fields to ensure input is valid. Provides UX feedback
- * @param: {undefined} none
- * @returns: {undefined} none
- */
-function checkFormEntry() {
-	if ($("#studentName").val().length < 2) {
-		$(".student-name").addClass("has-error");
-		$(".student-icon").popover("show");
-	} else {
-		$(".student-name").removeClass("has-error");
-		$(".student-name").addClass("has-success");
-		$(".student-icon").popover("hide");
-	}
-
-	if ($("#studentCourse").val().length < 2) {
-		$(".student-course").addClass("has-error");
-		$(".course-icon").popover("show");
-	} else {
-		$(".student-course").removeClass("has-error");
-		$(".student-course").addClass("has-success");
-		$(".course-icon").popover("hide");
-	}
-	if ($("#studentGrade").val() === "" || $("#studentGrade").val() > 100 || isNaN($("#studentGrade").val())) {
-		$(".student-grade").addClass("has-error");
-		$(".grade-icon").popover("show");
-	} else {
-		$(".student-grade").removeClass("has-error");
-		$(".student-grade").addClass("has-success");
-		$(".grade-icon").popover("hide");
-	}
-}

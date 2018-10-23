@@ -28,8 +28,7 @@ var data_object = {};
 */
 function initializeApp(){
     addClickHandlersToElements();
-    readDataFromSGT();
-      
+    readDataFromSGT();      
 }
 
 /***************************************************************************************************
@@ -45,7 +44,6 @@ function addClickHandlersToElements(){
     $("#update_btn").click( handleUpdateClicked );
 }
 
-
 /***************************************************************************************************
  * handleAddClicked - Event Handler when user clicks the add button
  * @param {object} event  The event object from the click
@@ -56,7 +54,6 @@ function handleAddClicked(){
     addStudent();
 }
 
-
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  * @param: {undefined} none
@@ -66,8 +63,6 @@ function handleAddClicked(){
 function handleCancelClick(){
     clearAddStudentFormInputs();
 } 
-
-
 
 /***************************************************************************************************
  * handleUpdateClicked - Event Handler when user clicks the update button
@@ -89,7 +84,6 @@ function clearAddStudentFormInputs(){
     $('#studentGrade').val('') ;
 }
 
-
 /***************************************************************************************************
  * errorMsg - error message show with modal 
  * @param response: message
@@ -97,18 +91,8 @@ function clearAddStudentFormInputs(){
 function errorMsg( response){
     $(".modal-body > p").text(response);
     $('#errorModal').modal();
-
 }
-/***************************************************************************************************
- * cleraArray - array clera 
- * @param array: array
- */
 
-function clearArray(array) {
-    while (array.length) {
-      array.pop();
-    }
-  }
 
 
 
