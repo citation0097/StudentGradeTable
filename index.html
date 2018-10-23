@@ -42,7 +42,7 @@
                 <div class="input-group">
                         
                     <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="glyphicon glyphicon-user" data-toggle="popover" data-placement="left" data-content="Please enter a valid name"></span>
                     </div>
                     <input type="text" class="form-control" name="name" id="studentName" placeholder="Student Name" required>
                 </div>
@@ -50,7 +50,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">
-                        <span class="glyphicon  glyphicon-list-alt"></span>
+                        <span class="glyphicon  glyphicon-list-alt" data-toggle="popover" data-placement="left" data-content="Please enter a valid course"></span>
                     </div>
                     <input type="text" class="form-control" name="course" id="course" placeholder="Student Course" required>
                 </div>
@@ -58,7 +58,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-education"></span>
+                        <span class="glyphicon glyphicon-education" data-toggle="popover" data-placement="left" data-content="Please enter a grade between 0-100"></span>
                     </div>
                     <input type="number" min = 0 max=100 class="form-control" name="grade" id="studentGrade"  placeholder="Student Grade" required>
                 </div>
@@ -130,10 +130,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="email" class="col-sm-3 control-label">Grade</label>
+                            <label for="" class="col-sm-3 control-label">Grade</label>
                             <div class="input-group col-sm-9">
                                 <div class="input-group-addon"><span class="glyphicon glyphicon-education"></span></div>
-                                <input type="number" min=1 max=100 class="form-control" id="updstudentGrade" placeholder="Student Grade">
+                                <input type="text" min=1 max=100 class="form-control" id="updstudentGrade" placeholder="Student Grade">
                             </div>
                         </div>
             </div>

@@ -18,7 +18,7 @@ var ajaxParams = {
 
 function readDataFromSGT(){
     
-    var ajaxSelectParams = {
+    let ajaxSelectParams = {
         data: data_object,
         dataType: 'json',
         url: 'index_select.php',
@@ -39,8 +39,8 @@ function readDataFromSGT(){
 
 function  getStudentList(response){
     if(response.success){
-        for( var i  in  response.data) {
-            var    student = {};
+        for( let i  in  response.data) {
+            let    student = {};
             student.id = response.data[i].id;
             student.name = response.data[i].name;
             student.course =  response.data[i].course;
@@ -48,7 +48,7 @@ function  getStudentList(response){
             student_array.push(student);
             updateStudentList();
         }
-        console.log('msg get success', student_array);
+       
     }else{
         errorMsg(response.errors);
     }
@@ -65,10 +65,10 @@ function  getStudentList(response){
 function updateStudentList(){
     $("tbody").empty();
     // console.log('updateStudentList student_array',student_array.length);
-    for( var i = 0 ;  i < student_array.length ; i++ ) {
+    for( let i = 0 ;  i < student_array.length ; i++ ) {
         renderStudentOnDom(student_array[i]);
     }
-    var average = calculateGradeAverage(student_array);
+    let average = calculateGradeAverage(student_array);
     renderGradeAverage(average);
 }
 /***************************************************************************************************
@@ -78,11 +78,11 @@ function updateStudentList(){
  * @calls clearAddStudentFormInputs, updateStudentList
  */
 function addStudent(){
-    var    student = {};
+    let    student = {};
     student.name =  $('#studentName').val();
     student.course =  $('#course').val();
     student.grade =  $('#studentGrade').val();
-    var valid = validateData( student.name, student.course,student.grade , "parent");
+    let valid = validateData( student.name, student.course,student.grade , "parent");
     console.log('addStudent valid',valid);
     if(valid ){
         data_object.name = student.name;
@@ -106,14 +106,13 @@ function addStudent(){
  * @calls clearAddStudentFormInputs, updateStudentList
  */
 function updateStudent(){
-    var    student = {};
+    let    student = {};
     // data_object ={};
     student.student_id =  $('#studentId').val();
     student.name =  $('#updStudentName').val();
     student.course =  $('#updCourse').val();
     student.grade =  $('#updstudentGrade').val();
-    var valid = validateData( student.name, student.course,student.grade , "popup");
-    // console.log('updateStudent valid',valid);
+    let valid = validateData( student.name, student.course,student.grade , "popup");
     
     if(valid ){
         $("tbody").empty();
@@ -150,10 +149,10 @@ function updateStudentArray(dataobj){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom(studentObj){
-    data_object ={};
-    var row = $('<tr>');
+    // data_object ={};
+    let row = $('<tr>');
     row.attr('id', studentObj.id);
-    var column = '<td>' + studentObj.name + '</td>'
+    let column = '<td>' + studentObj.name + '</td>'
         + '<td>' + studentObj.course + '</td>'
         + '<td>' + studentObj.grade + '</td>'
     var updateBtn = $('<td>').attr('type','button').addClass('btn btn-info');  
@@ -168,8 +167,8 @@ function renderStudentOnDom(studentObj){
     // delete button click
     deleteBtn.click( function(){
         data_object ={};
-        var stuIndex = student_array.indexOf(studentObj);
-        var targetrow = $(event.currentTarget).parent();
+        let stuIndex = student_array.indexOf(studentObj);
+        let targetrow = $(event.currentTarget).parent();
 
         data_object.student_id = parseInt(targetrow.attr('id'));
         ajaxParams.url = 'index_delete.php';
@@ -178,21 +177,23 @@ function renderStudentOnDom(studentObj){
         console.log('deleteStd',ajaxParams );
         student_array.splice(stuIndex,1);
         targetrow.remove();
-        var average = calculateGradeAverage(student_array);
+        let average = calculateGradeAverage(student_array);
         renderGradeAverage(average);
     });
    // Edit button click
     updateBtn.click( function(){
+        
         $('#updModal').modal();
         data_object ={};
-        var stuIndex = student_array.indexOf(studentObj);
-        var targetrow = $(event.currentTarget).parent();
+        let stuIndex = student_array.indexOf(studentObj);
+        let targetrow = $(event.currentTarget).parent();
 
-        var student_id = parseInt(targetrow.attr('id'));
+        let student_id = parseInt(targetrow.attr('id'));
         $('#studentId').val(student_id);
         $('#updStudentName').val(targetrow[0].children[0].innerText);
         $('#updCourse').val(targetrow[0].children[1].innerText);
         $('#updstudentGrade').val(targetrow[0].children[2].innerText);
+        
     });
 
 }
@@ -203,12 +204,12 @@ function renderStudentOnDom(studentObj){
  * @returns {number}
  */
 function calculateGradeAverage(student_list){
-    var sum = 0;
+    let sum = 0;
 
-    for( var i=0;  i < student_list.length ; i++ ){
-        sum += parseInt(student_list[i].grade);
+    for( let i=0;  i < student_list.length ; i++ ){
+        sum += parseFloat(student_list[i].grade);
     }
-    return parseInt(sum / (student_list.length));
+    return parseFloat(sum / (student_list.length));
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
@@ -226,16 +227,21 @@ function renderGradeAverage(average){
  */
 function validateData(fullName, course, grade, type){
    
-    var gradeRegex= /^([0-9]{1,2}){1}(\.[0-9]{1,2})?$/;
-    console.log('validate', fullName, course ,grade);
+    let gradeRegex= /^([0-9]|([1-9][0-9])|100)/;
     if ( fullName == ''){
         if(type==="parent"){
-            errorMsg("Name must be filled out");
+            // errorMsg("Name must be filled out");
+            $(".student-name").addClass("has-error");
+		    $(".student-icon").popover("show");
         }else{
             alert("Name must be filled out");
         }
-        // console.log('validate name false');
+       
         return false;
+    } else{
+        $(".student-name").removeClass("has-error");
+		$(".student-name").addClass("has-success");
+		$(".student-icon").popover("hide");
     }
     if ( course == ''){
         if(type==="parent"){
@@ -253,8 +259,42 @@ function validateData(fullName, course, grade, type){
         }else{
             alert("Grade Number must between 0 ~ 100");
         }
-        // console.log('validate number false');
         return false;
     }
     return true;
+
+}
+
+
+/***************************************************************************************************
+ * checkFormEntry - Function that checks each fields to ensure input is valid. Provides UX feedback
+ * @param: {undefined} none
+ * @returns: {undefined} none
+ */
+function checkFormEntry() {
+	if ($("#studentName").val().length < 2) {
+		$(".student-name").addClass("has-error");
+		$(".student-icon").popover("show");
+	} else {
+		$(".student-name").removeClass("has-error");
+		$(".student-name").addClass("has-success");
+		$(".student-icon").popover("hide");
+	}
+
+	if ($("#studentCourse").val().length < 2) {
+		$(".student-course").addClass("has-error");
+		$(".course-icon").popover("show");
+	} else {
+		$(".student-course").removeClass("has-error");
+		$(".student-course").addClass("has-success");
+		$(".course-icon").popover("hide");
+	}
+	if ($("#studentGrade").val() === "" || $("#studentGrade").val() > 100 || isNaN($("#studentGrade").val())) {
+		$(".student-grade").addClass("has-error");
+		$(".grade-icon").popover("show");
+	} else {
+		$(".student-grade").removeClass("has-error");
+		$(".student-grade").addClass("has-success");
+		$(".grade-icon").popover("hide");
+	}
 }
