@@ -1,10 +1,8 @@
 
 <?php
     require_once("mysql_connect.php");
-    // print_r($_POST);
-    //  $query = "SELECT student_id , student_name, course, grade FROM student_grade 
-    //            WHERE  student_id = '{$_POST['id']}'";
-     $query = "SELECT student_id as id , student_name as name  , course, grade FROM student_grade"; 
+    
+    $query = "SELECT student_id as id , student_name as name  , course, grade FROM student_grade"; 
     
     $result = mysqli_query($conn,$query);
     $output =[

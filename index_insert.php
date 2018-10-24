@@ -1,11 +1,6 @@
-<!-- index_insert.php -->
 <?php
     require_once("mysql_connect.php");
-
-    // $query = "INSERT INTO customers (id , given_name, family_name) 
-    //            VALUES (5, 'hank' , 'kim' ) ";
-    print_r($_POST);
-
+   
     $query = "INSERT INTO student_grade (student_id , student_name, course, grade) 
     VALUES (  default , '{$_POST['name']}' , '{$_POST['course']}' , '{$_POST['grade']}' ) ";          
     print_r($query); 
