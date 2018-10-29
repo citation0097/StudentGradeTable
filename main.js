@@ -74,7 +74,15 @@ function handleUpdateClicked(){
     updateStudent();
     
 }
-
+/***************************************************************************************************
+ * handleDeleteBtnClicked - Event Handler when user clicks the update button
+ * @param: targetrow studentindex , 
+ * @return: 
+       none
+ */
+function handleDeleteBtnClicked(targetrid, studentindex){
+    displayConfirmModal(targetrid, studentindex);
+}
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
@@ -85,12 +93,13 @@ function clearAddStudentFormInputs(){
 }
 
 /***************************************************************************************************
- * errorMsg - error message show with modal 
+ * popupMsg -  message show with modal 
  * @param response: message
  */
-function errorMsg( response){
+function popupMsg( response ){
     $(".modal-body > p").text(response);
-    $('#errorModal').modal();
+    $('#confirmModal').modal();
+  
 }
 
 

@@ -45,7 +45,7 @@ function  getStudentList(response){
         }
        
     }else{
-        errorMsg(response.errors);
+        popupMsg(response.errors);
     }
 }
 
@@ -59,7 +59,6 @@ function  getStudentList(response){
  */
 function updateStudentList(){
     $("tbody").empty();
-    // console.log('updateStudentList student_array',student_array.length);
     for( let i = 0 ;  i < student_array.length ; i++ ) {
         renderStudentOnDom(student_array[i]);
     }
@@ -78,7 +77,6 @@ function addStudent(){
     student.course =  $('#course').val();
     student.grade =  $('#studentGrade').val();
     let valid = validateData( student.name, student.course,student.grade , "parent");
-    console.log('addStudent valid',valid);
     if(valid ){
         data_object.name = student.name;
         data_object.course = student.course;
@@ -105,7 +103,6 @@ function updateStudent(){
     student.course =  $('#updCourse').val();
     student.grade =  $('#updstudentGrade').val();
     let valid = validateData( student.name, student.course,student.grade , "popup");
-    console.log('updateStudent',valid);
     if(valid ){
         $("tbody").empty();
         data_object.student_id = student.student_id ;
@@ -118,6 +115,53 @@ function updateStudent(){
         updateStudentArray(data_object);
         
     } 
+}
+/***************************************************************************************************
+* displayConfirmModal -  displaying model
+* @params {studnetrow,studentIndex } 
+* @returns  {undefined}
+*/
+
+function displayConfirmModal(studnetrow, studentIndex){
+    $(".modal-body > p").text("Do you want to delete this data?");
+    $('#confirmModal').modal();
+    $("#cancel_btn").on("click", closeDeletingModal);
+    $("#delete_btn").on("click", ()=>{
+    deleteStudent(studnetrow, studentIndex);
+
+    });
+
+}
+
+/***************************************************************************************************
+* closeDeletingModal - close displaying model
+* @params {none} 
+* @returns  {undefined}
+*/
+function closeDeletingModal(){
+    let modal = $('#confirmModal').css('display','none');
+}
+
+
+/***************************************************************************************************
+ * deleteStudent - delete student info
+ * @param {student, studentIndex} none
+ * @return undefined
+ */
+function deleteStudent(targetrow,studentIndex){
+    let   data_object ={};
+    
+    data_object.student_id = parseInt(targetrow.attr('id'));
+    console.log("delete",parseInt(targetrow.attr('id')) );
+    ajaxParams.url = 'index_delete.php';
+    ajaxParams.data = data_object;
+    $.ajax(ajaxParams);
+    student_array.splice(studentIndex,1);
+    targetrow.remove();
+    let average = calculateGradeAverage(student_array);
+    renderGradeAverage(average);
+    
+    closeDeletingModal();
 }
 
 // /***************************************************************************************************
@@ -147,7 +191,7 @@ function renderStudentOnDom(studentObj){
     let column = '<td>' + studentObj.name + '</td>'
         + '<td>' + studentObj.course + '</td>'
         + '<td>' + studentObj.grade + '</td>'
-    var updateBtn = $('<td>').attr('type','button').addClass('btn btn-info');  
+    var updateBtn = $('<td>').attr('type','button' ).addClass('btn btn-info');  
     updateBtn.text('Update');  
     var deleteBtn = $('<td>').attr('type','button').addClass('btn btn-danger');
     deleteBtn.text('Delete');
@@ -158,7 +202,10 @@ function renderStudentOnDom(studentObj){
     row.appendTo(body);
     // delete button click
     deleteBtn.click( function(){
-        let result = confirm("Are you sure delete?");
+        // let stuIndex = student_array.indexOf(studentObj);
+        // let targetrow = $(event.currentTarget).parent();
+        // handleDeleteBtnClicked(targetrow, stuIndex);
+        let result = confirm("Do you want to delete ?");
         if(result){
             data_object ={};
             let stuIndex = student_array.indexOf(studentObj);
@@ -174,6 +221,7 @@ function renderStudentOnDom(studentObj){
             renderGradeAverage(average);
         }   
     });
+
    // Edit button click
     updateBtn.click( function(){
         
