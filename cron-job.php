@@ -1,8 +1,9 @@
 <?php
-require_once("mysql_connect.php");
+// require_once("mysql_connect.php");
+$conn = mysqli_connect("localhost", "root", "Magojun0097!","hkimdb");
 $truncate = "TRUNCATE TABLE student_data";
 $result = $conn->query($truncate);
-$reinsertSQL = "INSERT INTO `student_grade` (`student_id`, `name`, `course`, `grade`) VALUES
+$reinsertSQL = "INSERT INTO `student_grade` (`student_id`, `student_name`, `course`, `grade`) VALUES
 (1, 'Tien', 'react', 99),
 (2, 'David', 'PHP', 100),
 (3, 'Randy', 'Javascript', 95),
