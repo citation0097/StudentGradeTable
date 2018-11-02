@@ -80,8 +80,8 @@ function handleUpdateClicked(){
  * @return: 
        none
  */
-function handleDeleteBtnClicked(targetrid, studentindex){
-    displayConfirmModal(targetrid, studentindex);
+function handleDeleteBtnClicked(currentStudent, studentindex){
+    displayConfirmModal(currentStudent, studentindex);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable

@@ -127,8 +127,9 @@ function displayConfirmModal(studnetrow, studentIndex){
     $('#confirmModal').modal();
     $("#cancel_btn").on("click", closeDeletingModal);
     $("#delete_btn").on("click", ()=>{
-    deleteStudent(studnetrow, studentIndex);
-
+    deleteStudent(studnetrow , studentIndex);
+    // deleteStudent(student_array[studentIndex] , studentIndex);
+    console.log("displayConfirmModal",studnetrow );
     });
 
 }
@@ -148,16 +149,19 @@ function closeDeletingModal(){
  * @param {student, studentIndex} none
  * @return undefined
  */
-function deleteStudent(targetrow,studentIndex){
+function deleteStudent(currentStudent,studentIndex){
     let   data_object ={};
     
-    data_object.student_id = parseInt(targetrow.attr('id'));
-    console.log("delete",parseInt(targetrow.attr('id')) );
+    // data_object.student_id = parseInt(targetrow.attr('id'));
+    // console.log("delete",parseInt(targetrow.attr('id')) );
+    data_object.student_id = currentStudent.id;
+    console.log("targetrow.id",currentStudent.id );
     ajaxParams.url = 'index_delete.php';
     ajaxParams.data = data_object;
     $.ajax(ajaxParams);
     student_array.splice(studentIndex,1);
-    targetrow.remove();
+    updateStudentList();
+    // targetrow.remove();
     let average = calculateGradeAverage(student_array);
     renderGradeAverage(average);
     
@@ -202,24 +206,24 @@ function renderStudentOnDom(studentObj){
     row.appendTo(body);
     // delete button click
     deleteBtn.click( function(){
-        // let stuIndex = student_array.indexOf(studentObj);
-        // let targetrow = $(event.currentTarget).parent();
-        // handleDeleteBtnClicked(targetrow, stuIndex);
-        let result = confirm("Do you want to delete ?");
-        if(result){
-            data_object ={};
-            let stuIndex = student_array.indexOf(studentObj);
-            let targetrow = $(event.currentTarget).parent();
+        let stuIndex = student_array.indexOf(studentObj);
+        let currentStudent = student_array[stuIndex]; // $(event.currentTarget).parent();
+        handleDeleteBtnClicked(currentStudent, stuIndex);
+        // let result = confirm("Do you want to delete ?");
+        // if(result){
+        //     data_object ={};
+        //     let stuIndex = student_array.indexOf(studentObj);
+        //     let targetrow = $(event.currentTarget).parent();
 
-            data_object.student_id = parseInt(targetrow.attr('id'));
-            ajaxParams.url = 'index_delete.php';
-            ajaxParams.data = data_object;
-            $.ajax(ajaxParams);
-            student_array.splice(stuIndex,1);
-            targetrow.remove();
-            let average = calculateGradeAverage(student_array);
-            renderGradeAverage(average);
-        }   
+        //     data_object.student_id = parseInt(targetrow.attr('id'));
+        //     ajaxParams.url = 'index_delete.php';
+        //     ajaxParams.data = data_object;
+        //     $.ajax(ajaxParams);
+        //     student_array.splice(stuIndex,1);
+        //     targetrow.remove();
+        //     let average = calculateGradeAverage(student_array);
+        //     renderGradeAverage(average);
+        // }   
     });
 
    // Edit button click
