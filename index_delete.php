@@ -11,7 +11,7 @@
         'success'=> [],
         'error'  => []
     ];
-    git
+    
     if($result){
          $output['success'][] = true;
     }else{
