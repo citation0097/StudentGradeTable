@@ -282,13 +282,17 @@ function renderStudentOnDom(studentObj){
     let column = '<td>' + studentObj.name + '</td>'
         + '<td>' + studentObj.course + '</td>'
         + '<td>' + studentObj.grade + '</td>'
-    var updateBtn = $('<td>').attr('type','button' ).addClass('btn btn-info');  
+    var tableButton1 = $("<td>");
+    var updateBtn = $('<button>').addClass('btn btn-info');  
     updateBtn.text('Update');  
-    var deleteBtn = $('<td>').attr('type','button').addClass('btn btn-danger');
+    var tableButton2 = $("<td>");
+    var deleteBtn = $('<button>').addClass('btn btn-danger');
     deleteBtn.text('Delete');
     var body = $(".table").find('tbody');
     row.append(column);
+    tableButton1.append(updateBtn);
     row.append(updateBtn);
+    tableButton2.append(deleteBtn);
     row.append(deleteBtn);
     row.appendTo(body);
     // delete button click
