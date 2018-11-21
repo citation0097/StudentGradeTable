@@ -174,7 +174,7 @@ function addStudent(){
     if(valid ){
         data_object.name = student.name;
         data_object.course = student.course;
-        data_object.grade     = student.grade;
+        data_object.grade     = Number(student.grade);
         ajaxParams.data = data_object;
         ajaxParams.url = 'index_insert.php';
         $.ajax(ajaxParams);   
@@ -202,7 +202,7 @@ function updateStudent(){
         data_object.student_id = student.student_id ;
         data_object.name = student.name;
         data_object.course = student.course;
-        data_object.grade     = student.grade;
+        data_object.grade     = Number(student.grade);
         ajaxParams.data = data_object;
         ajaxParams.url = 'index_update.php';
         $.ajax(ajaxParams);   
@@ -352,7 +352,9 @@ function validateData(fullName, course, grade, type){
            $(".student-name").addClass("has-error");
 		   $(".student-icon").popover("show");
         }else{
-           alert("Name must be filled out");
+        //    $(".student-name-pop").addClass("has-error");
+        //    $(".student-icon-pop").popover("show"); 
+              alert("Name must be filled out");
         }
         return false;
     }else{
@@ -366,22 +368,23 @@ function validateData(fullName, course, grade, type){
             $(".student-course").addClass("has-error");
 		    $(".course-icon").popover("show");
         }else{
+            // $(".student-course-pop").addClass("has-error");
+            // $(".course-icon-pop").popover("show");
             alert("Course must be filled out");
         }
         return false;
     } else{
-        $(".student-course").removeClass("has-error");
-        $(".student-course").addClass("has-success");
-        $(".course-icon").popover("hide");
-            
+            $(".student-course").removeClass("has-error");
+            $(".student-course").addClass("has-success");
+            $(".course-icon").popover("hide");
     }
     // grade
-    if(grade === "" || grade > 100 || isNaN(grade)){
+    if(grade === "" || grade > 100 || Number(grade).isNaN){
         if(type==="parent"){
             $(".student-grade").addClass("has-error");
 		    $(".grade-icon").popover("show");
         }else{
-            alert("Grade Number must between 0 ~ 100");
+             alert("Grade Number must between 0 ~ 100");
         }
         return false;
     } else{
