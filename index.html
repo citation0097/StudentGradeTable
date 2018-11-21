@@ -7,6 +7,7 @@
     <script src="main.js"></script>
     <script src="ajax_dom.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Student Grade Management</title>
 </head>
 <body>
    
@@ -73,11 +74,14 @@
         <table class="table ">
             <thead class="thead">
                 <tr>
-                    <th>Student Name</th>
-                    <th>Student Course</th>
-                    <th>Student Grade</th>
+                    <th class="hidden-xs ">Student Name</th>
+                    <th class="visible-xs hidden-sm hidden-md hidden-lg">Name</th>
+                    <th class="hidden-xs ">Student Course</th>
+                    <th class="visible-xs hidden-sm hidden-md hidden-lg">Course</th>
+                    <th class="hidden-xs ">Student Grade</th>
+                    <th class="visible-xs hidden-sm hidden-md hidden-lg">Grade</th>
                     <th class="hidden-xs ">Operations</th>
-                    <th class="visible-xs hidden-sm hidden-md hidden-lg">Operations</th>
+                    <th class="visible-xs hidden-sm hidden-md hidden-lg">Oper</th>
     
                 </tr>
             </thead>
@@ -123,7 +127,8 @@
                         <label for="StudentName" class="col-sm-3 control-label">Name</label>
                         <div class="input-group col-sm-9">
                             <div class="student-icon-pop input-group-addon">
-                                <span class="glyphicon glyphicon-user"></span>
+                                <!-- <span class="glyphicon glyphicon-user"></span> -->
+                                <span class="student-icon-pop glyphicon glyphicon-user" data-toggle="popover" data-placement="left" data-content="Please enter a valid name"></span>
                             </div>
                             <input type="text" class="form-control" id="updStudentName" readonly>
                         </div>
@@ -132,7 +137,8 @@
                         <label for="dob" class="col-sm-3 control-label">Course</label>
                         <div class="input-group col-sm-9">
                             <div class="course-icon-pop input-group-addon">
-                                <span class="glyphicon glyphicon-list-alt"></span>
+                                <!-- <span class="glyphicon glyphicon-list-alt"></span> -->
+                                <span class="course-icon-pop glyphicon  glyphicon-list-alt" data-toggle="popover" data-placement="left" data-content="Please enter a valid course"></span>
                             </div>
                             <input type="text" class="form-control" id="updCourse" placeholder="Student Course">
                         </div>
@@ -148,7 +154,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="update_btn" >SAVE</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="update_btn" >Save</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
